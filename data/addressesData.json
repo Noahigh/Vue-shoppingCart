@@ -1,0 +1,54 @@
+{
+	"status": 0,
+	"message": "",
+	"results": [
+		{
+			"addressId": "100002121",
+			"userName": "Jack Jones",
+			"streetName": "北京市朝阳区金台夕照",
+			"postCode": "100001",
+			"tel": "15333333333",
+			"isDefault": true
+		},
+		{
+			"addressId": "100002122",
+			"userName": "Jones",
+			"streetName": "北京市昌平区沙河",
+			"postCode": "100001",
+			"tel": "15633333333",
+			"isDefault": false
+		},
+		{
+			"addressId": "100002123",
+			"userName": "Peter",
+			"streetName": "北京市丰台区",
+			"postCode": "100001",
+			"tel": "15933333333",
+			"isDefault": false
+		},
+		{
+			"addressId": "100002124",
+			"userName": "LiMing",
+			"streetName": "北京市昌平区生命科学园",
+			"postCode": "10001",
+			"tel": "15733333333",
+			"isDefault": false
+		},
+		{
+			"addressId": "100002125",
+			"userName": "Mary",
+			"streetName": "北京市昌平区高教园",
+			"postCode": "10001",
+			"tel": "15533333333",
+			"isDefault": false
+		},
+		{
+			"addressId": "100002125",
+			"userName": "Noah",
+			"streetName": "北京市",
+			"postCode": "10001",
+			"tel": "15233333333",
+			"isDefault": false
+		}
+	]
+}

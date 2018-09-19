@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+	<!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+	<title>购物车</title>
+</head>
+<body>
+	<div class="row mt-3 ml-0 mr-0">
+		<hr class="col-md-3">
+		<span class="text-center col-md-3">购物车</span>
+		<hr class="col-md-3">
+	</div>
+	<div id="app" class="mt-3 ml-3 mr-3">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th scope="col"></th>
+					<th scope="col">id</th>					
+					<th scope="col">#</th>
+					<th scope="col">商品信息</th>
+					<th scope="col">商品金额</th>
+					<th scope="col">商品数量</th>
+					<th scope="col">总金额</th>
+					<th scope="col">编辑</th>
+				</tr>
+			</thead>
+			<tbody >
+				<tr v-for="(item, index) in productList">
+					<td>
+						<input type="checkbox" v-model="item.checked" @click="selectedProduct(item)">
+					</td>
+					<th>{{ index }}</th>
+					<td scope="row">{{ item.productId }}</td>
+					<td>
+						{{ item.productName }}
+						<small v-for="partsName in item.parts">赠送：{{ partsName.partsName }}</small>
+					</td>
+					<td>{{ item.productPrice | formatMoney }}</td>
+					<td><button type="button" class="btn" @click="changeMoney(item, -1)">-</button> <input type="text" v-model="item.productQuentity" style="max-width:35px;"> <button type="button" class="btn" v-on:click="changeMoney(item, 1)">+</button></td>
+					<td>{{ item.productPrice*item.productQuentity | formatMoney }}</td>
+					<td><button type="button" class="btn" data-toggle="modal" data-target="#delModal" @click="delConfirm(item)"><i class="fas fa-trash" style="color:red;"></i></button></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="checkbox" v-model="selectAllFlag" @click="selectAll"><strong> 全选</strong>
+						<!-- 其实[取消全选]这个没什么意义... -->
+					<!-- <a class="btn btn-warning" @click="selectAll"> 取消全选</a> -->
+					</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<th colspan="2">共计： {{ totalMoney | formatMoney }} 
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<button type="button" class="btn btn-danger" style="width:180px;">结算</button>
+					</th>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<th></th>
+					<td></td>
+				</tr>
+				
+			</tbody>
+		</table>
+			<p class="text-warning">状态码： {{ statusNum }}</p>
+			<p class="text-danger">错误信息： {{ errorMsg }}</p>
+		
+		<!-- del modal -->
+		<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="delModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="delModalLabel">Are you sure ...</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body text-danger text-center">
+						<strong>You want to delete this product?</strong>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">
+							No
+						</button>
+						<button class="btn btn-danger" data-dismiss="modal" @click="delProduct">Yes</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- Vue.js -->
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <!-- Vue-resource -->
+    <script src="./node_modules/vue-resource/dist/vue-resource.js"></script>
+
+    <script src="./end.js"></script>
+<!--
+	<script>
+		var vm1 = new Vue({
+			el: '#app1',
+			data: {
+				statusId: -1,
+				errorMsg: '',
+				info: ''
+			},
+			filters: {
+				
+			},
+			mounted: function () {
+				this.readyView();
+			},
+			methods: {
+				readyView: function () {
+					var _this = this;
+					this.$http.get("data/goodsData.json", {"id":123}, {emulateJSON: true}).then(response => {
+						// get body data
+						console.log('ahahahah');
+						alert('ahhaha');
+						
+						this.statusId = 200;
+						this.info = response.body.result.totalMoney;
+					}, response => {
+						this.statusId = 500;
+						this.errorMsg = '服务器请求失败';
+						console.log('a');
+						this.info = response.body.status;
+						console.log('b');
+						
+					}).catch(function (error) {
+						console.log(error);
+						this.errorMsg = error;
+						this.info = error.body.result.totalMoney;
+					});
+				}
+			}
+		});
+		
+		var vm2 = new Vue({
+			el: '#app2',
+			data: {
+				statusId: -1,
+				errorMsg: '',
+				info: ''
+			},
+			filters: {
+				
+			},
+			mounted: function () {
+				this.initView();
+			},
+			methods: {
+				initView: function () {
+					var _this = this;
+					this.$http.get('data/goodsData.json', {emulateJSON: true})
+						.then(response => {
+							this.$set('info', j.body.result.totalMoney);
+					})
+					.catch(function (error) {
+						console.log(error);
+						this.errorMsg = error;
+					});
+				}
+			}
+		});
+	</script>
+-->
+</body>
+</html>
